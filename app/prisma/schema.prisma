@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Estacao {
+  ID_Estacao         Int    @id @default(autoincrement())
+  UID                String    @default(uuid())
+  Nome               String
+  Latitude           Float
+  Longitude          Float
+  Data_Instalacao    DateTime
+  Tipo_Estacao      String
+  Indicativo_Ativa   Boolean
+  Parametros        Parametro[]
+}
+
+model Tipo_Parametro {
+  ID_Tipo_Parametro  Int       @id @default(autoincrement())
+  Fator              Float
+  Offset             Float
+  Unidade            String
+  Nome_Tipo_Parametro String
+  Indicativo_Ativo   Boolean
+  Parametros        Parametro[]
+}
+
+model Tipo_Alerta {
+  ID_Tipo_Alerta     Int       @id @default(autoincrement())
+  Nome_Tipo_Alerta   String
+  Valor              Float
+  Operador_Condicional String
+  Indicativo_Ativo   Boolean
+  ParametroAlertas   Parametro_Alerta[]
+}
+
+model Usuario {
+  ID_Usuario         Int       @id @default(autoincrement())
+  Nome_Usuario       String
+  CPF_Usuario        String    @unique
+  Role               String
+  Senha              String
+  Token              String
+}
+
+model Parametro {
+  ID_Parametro       Int       @id @default(autoincrement())
+  ID_Estacao        Int
+  ID_Tipo_Parametro  Int
+  Estacao           Estacao   @relation(fields: [ID_Estacao], references: [ID_Estacao])
+  TipoParametro      Tipo_Parametro @relation(fields: [ID_Tipo_Parametro], references: [ID_Tipo_Parametro])
+  Medidas           Medida[]
+  ParametroAlertas   Parametro_Alerta[]
+}
+
+model Parametro_Alerta {
+  ID_Parametro_Alerta Int       @id @default(autoincrement())
+  ID_Parametro       Int
+  ID_Tipo_Alerta     Int
+  Parametro         Parametro   @relation(fields: [ID_Parametro], references: [ID_Parametro])
+  TipoAlerta        Tipo_Alerta  @relation(fields: [ID_Tipo_Alerta], references: [ID_Tipo_Alerta])
+  Ocorrencias       Ocorrencias[]
+}
+
+model Medida {
+  ID_Medida         Int       @id @default(autoincrement())
+  ID_Parametro      Int
+  UnixTime          Int
+  Valor             Float
+  Parametro        Parametro   @relation(fields: [ID_Parametro], references: [ID_Parametro])
+  Ocorrencias       Ocorrencias[] @relation("MedidaOcorrencias")
+}
+
+model Ocorrencias {
+  ID_Ocorrencia     Int       @id @default(autoincrement())
+  ID_Parametro_Alerta Int
+  ID_Medida        Int
+  ParametroAlerta  Parametro_Alerta @relation(fields: [ID_Parametro_Alerta], references: [ID_Parametro_Alerta])
+  Medida          Medida      @relation("MedidaOcorrencias", fields: [ID_Medida], references: [ID_Medida])
+}
