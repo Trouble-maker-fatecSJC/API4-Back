@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity("estacao_principal")
-export class EstacaoPrincipal {
+@Entity("estacao")
+export class Estacao {
     @PrimaryGeneratedColumn()
     id_estacao: number;
 
@@ -15,5 +15,8 @@ export class EstacaoPrincipal {
     endereco: string;
 
     @Column({ length: 100 })
-    lat_long: string;
+    latitude: string;
+
+    @Column({ length: 100 })
+    longitude: string;
 }
