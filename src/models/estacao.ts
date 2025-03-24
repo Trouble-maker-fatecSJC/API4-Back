@@ -14,9 +14,15 @@ export class Estacao {
     @Column({ length: 400 })
     endereco: string;
 
-    @Column({ length: 100 })
-    latitude: string;
+    @Column("float")
+    latitude: number;
 
-    @Column({ length: 100 })
-    longitude: string;
+    @Column("float")
+    longitude: number;
+
+    @Column({ type: "date" })
+    data_instalacao: Date;
+
+    @Column()
+    status: boolean;
 }
