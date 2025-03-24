@@ -36,9 +36,31 @@ class UsuarioService {
 
   async atualizar(cpf: string, dados: Partial<Usuario>) {
     const usuarioRepository = AppDataSource.getRepository(Usuario);
+
+    console.log("Recebendo atualização para CPF:", cpf);
+    console.log("Dados recebidos para atualização:", dados);
+
+    // Verifica se o usuário existe
+    const usuarioExistente = await usuarioRepository.findOneBy({ cpf });
+    if (!usuarioExistente) {
+        throw new Error("Usuário não encontrado");
+    }
+
+    // Remove campos `undefined` para evitar problemas na atualização
+    Object.keys(dados).forEach((key) => {
+        if (dados[key as keyof Usuario] === undefined) {
+            delete dados[key as keyof Usuario];
+        }
+    });
+
+    console.log("Dados filtrados para atualização:", dados);
+
+    // Atualiza o usuário
     await usuarioRepository.update({ cpf }, dados);
+
+    // Retorna o usuário atualizado
     return await this.buscarPorCpf(cpf);
-  }
+}
 
   async deletar(cpf: string) {
     const usuarioRepository = AppDataSource.getRepository(Usuario);
