@@ -55,3 +55,4 @@ class MedidasController {
 }
 
 export default new MedidasController();
+
