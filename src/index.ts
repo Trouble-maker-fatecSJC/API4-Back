@@ -19,6 +19,8 @@
   app.use("/api", estacaoRoutes);
   app.use("/api", medidasRoutes)
   app.use("/api", tipoParametroRoutes)
+  app.use("/api", tipoAlertaRoutes)
+  app.use("/api", parametroRoutes)
   const PORT = process.env.PORT || 3000;
   
   // Função principal que aguarda a verificação e criação do banco
