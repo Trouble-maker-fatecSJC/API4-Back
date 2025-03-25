@@ -22,6 +22,14 @@ class EstacaoService {
     await this.estacaoRepository.remove(estacao);
   }
 
+  async buscarPorId(id: number) {
+    const estacao = await this.estacaoRepository.findOneBy({ id_estacao: id });
+    if (!estacao) {
+      throw new Error("Estação não encontrada");
+    }
+    return estacao;
+  }
+
   async buscarTodos() {
     return await this.estacaoRepository.find();
   }

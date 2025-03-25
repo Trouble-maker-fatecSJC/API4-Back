@@ -5,6 +5,7 @@
   import estacaoRoutes from "./routes/estacaoRoutes";
   import medidasRoutes from "./routes/medidasRoutes";
   import tipoParametroRoutes from "./routes/tipoParametroRoutes";
+  import parametroRoutes from "./routes/parametroRoutes";
   import dotenv from "dotenv";
   import { checkAndCreateDatabase } from "./config/database"; // Importe a função de verificação/criação do banco de dados
   
@@ -17,6 +18,7 @@
   app.use("/api", estacaoRoutes);
   app.use("/api", medidasRoutes)
   app.use("/api", tipoParametroRoutes)
+  app.use("/api", parametroRoutes)
   const PORT = process.env.PORT || 3000;
   
   // Função principal que aguarda a verificação e criação do banco
