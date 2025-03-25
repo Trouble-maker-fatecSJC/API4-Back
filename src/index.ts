@@ -3,6 +3,7 @@
   import { AppDataSource } from "./config/database";
   import usuarioRoutes from "./routes/usuarioRoutes";
   import estacaoRoutes from "./routes/estacaoRoutes";
+  import medidasRoutes from "./routes/medidasRoutes";
   import dotenv from "dotenv";
   import { checkAndCreateDatabase } from "./config/database"; // Importe a função de verificação/criação do banco de dados
   
@@ -13,6 +14,7 @@
   app.use(express.json());
   app.use("/api", usuarioRoutes);
   app.use("/api", estacaoRoutes);
+  app.use("/api", medidasRoutes)
   
   const PORT = process.env.PORT || 3000;
   
