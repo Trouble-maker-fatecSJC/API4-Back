@@ -10,7 +10,7 @@ class ParametroService {
   async buscarPorId(id: number) {
     const parametroRepository = AppDataSource.getRepository(Parametros);
     return await parametroRepository.findOne({
-      where: { id },
+      where: { id_parametro: id },
       relations: ["usuario", "tipoParametro", "estacao", "medida"],
     });
   }
@@ -24,13 +24,13 @@ class ParametroService {
 
   async atualizar(id: number, dados: Partial<Parametros>) {
     const parametroRepository = AppDataSource.getRepository(Parametros);
-    await parametroRepository.update({ id }, dados);
+    await parametroRepository.update({ id_parametro: id }, dados);
     return await this.buscarPorId(id);
   }
 
   async deletar(id: number) {
     const parametroRepository = AppDataSource.getRepository(Parametros);
-    await parametroRepository.delete({ id });
+    await parametroRepository.delete({ id_parametro: id });
   }
 }
 

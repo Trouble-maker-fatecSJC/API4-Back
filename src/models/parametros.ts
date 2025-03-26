@@ -7,7 +7,7 @@ import { Medidas } from "./medidas";
 @Entity("parametros")
 export class Parametros {
     @PrimaryGeneratedColumn()
-    id: number;
+    id_parametro: number;
 
     @Column({ type: "float" })
     velocidade_vento: number;
