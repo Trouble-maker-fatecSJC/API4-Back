@@ -10,7 +10,7 @@ class tipoAlertaService {
     // Verificar se o parâmetro existe antes de associá-lo
     if (dados.parametro) {
       const parametroRepository = AppDataSource.getRepository(Parametros);
-      const parametro = await parametroRepository.findOne({ where: { id: dados.parametro.id } });
+      const parametro = await parametroRepository.findOne({ where: { id_parametro: dados.parametro.id_parametro } });
 
       if (!parametro) {
         throw new Error("Parâmetro não encontrado");
@@ -47,7 +47,7 @@ class tipoAlertaService {
     // Verificar se o parâmetro existe antes de associá-lo
     if (dados.parametro) {
       const parametroRepository = AppDataSource.getRepository(Parametros);
-      const parametro = await parametroRepository.findOne({ where: { id: dados.parametro.id } });
+      const parametro = await parametroRepository.findOne({ where: { id_parametro: dados.parametro.id_parametro } });
 
       if (!parametro) {
         throw new Error("Parâmetro não encontrado");
