@@ -6,7 +6,7 @@ export class Alerta {
     @PrimaryGeneratedColumn()
     id_alerta: number;
 
-    @Column({ type: "date" })
+    @Column({ type: "timestamp" }) // Alterado de "date" para "timestamp"
     data_alerta: Date;
 
     @ManyToOne(() => TipoAlerta)
