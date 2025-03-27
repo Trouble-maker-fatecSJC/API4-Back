@@ -1,4 +1,4 @@
-import { EntitySubscriberInterface, EventSubscriber, InsertEvent } from "typeorm";
+import { EntitySubscriberInterface, EventSubscriber, InsertEvent, UpdateEvent } from "typeorm";
 import { Parametros } from "../models/parametros";
 import { ColetarParametros } from "../models/coletarParametros";
 
@@ -12,11 +12,23 @@ export class ParametrosSubscriber implements EntitySubscriberInterface<Parametro
         const coletarParametrosRepository = event.manager.getRepository(ColetarParametros);
 
         const novoColetarParametros = coletarParametrosRepository.create({
-            estacao: event.entity.estacao,
+            estacao: event.entity?.estacao,
             parametro: event.entity,
             data_coleta: new Date(),
         });
 
+        await coletarParametrosRepository.save(novoColetarParametros);
+    }
+
+    async afterUpdate(event: UpdateEvent<Parametros>) {
+        const coletarParametrosRepository = event.manager.getRepository(ColetarParametros);
+    
+        const novoColetarParametros = coletarParametrosRepository.create({
+            estacao: event.entity?.estacao,
+            parametro: event.entity,
+            data_coleta: new Date(),
+        });
+    
         await coletarParametrosRepository.save(novoColetarParametros);
     }
 }

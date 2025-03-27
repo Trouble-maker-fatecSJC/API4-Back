@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 import mysql from "mysql2/promise"; // Usando mysql2
+import { ParametrosSubscriber } from "../subscriber/parametroSubscriber";
 
 dotenv.config();
 
@@ -41,4 +42,5 @@ export const AppDataSource = new DataSource({
   entities: ["src/models/*.ts"],
   synchronize: true,
   logging: false,
+  subscribers: [ParametrosSubscriber]
 });

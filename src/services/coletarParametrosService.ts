@@ -42,9 +42,16 @@ class ColetarParametrosService {
   // Buscar todas as coletas de parâmetros
   async buscarTodos() {
     return await this.coletarParametrosRepository.find({
-      relations: ["estacao", "parametro"], // Garante que os relacionamentos sejam carregados
+      relations: [
+        "estacao",
+        "parametro",
+        "parametro.usuario", // Carrega os dados do usuário associado ao parâmetro
+        "parametro.tipoParametro", // Carrega o tipo do parâmetro
+        "parametro.medida" // Carrega a medida do parâmetro
+      ],
     });
-  }
+}
+
 
 
   // Buscar ColetarParametros por ID

@@ -11,7 +11,7 @@ export class ColetarParametros {
     @JoinColumn({ name: "id_estacao" })
     estacao: Estacao;
 
-    @ManyToOne(() => Parametros)
+    @ManyToOne(() => Parametros, { eager: true })
     @JoinColumn({ name: "id_parametro" })
     parametro: Parametros;
 
