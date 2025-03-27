@@ -48,7 +48,12 @@ class TipoAlertaController {
   async atualizar(req: Request, res: Response) {
     try {
       // Verificando se o parâmetro existe
-      const parametro = await parametroService.buscarPorId(Number(req.body.id_do_parametro));
+      const parametroId = req.body.parametro?.id; // Ajustado para acessar req.body.parametro.id
+      if (!parametroId) {
+        return res.status(400).json({ message: "ID do parâmetro é obrigatório" });
+      }
+
+      const parametro = await parametroService.buscarPorId(Number(parametroId));
       if (!parametro) {
         return res.status(404).json({ message: "Parâmetro não encontrado" });
       }
@@ -65,6 +70,7 @@ class TipoAlertaController {
       return res.status(400).json({ error: err.message });
     }
   }
+
 
   async deletar(req: Request, res: Response) {
     try {
