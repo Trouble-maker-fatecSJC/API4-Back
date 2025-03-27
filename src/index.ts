@@ -10,6 +10,7 @@
   import alertaRoutes from "./routes/alertaRoutes";
   import dotenv from "dotenv";
   import { checkAndCreateDatabase } from "./config/database"; // Importe a função de verificação/criação do banco de dados
+  import coletarRoutes from "./routes/coletaRoutes";
   
   dotenv.config();
   
@@ -23,6 +24,7 @@
   app.use("/api", tipoAlertaRoutes)
   app.use("/api", parametroRoutes)
   app.use("/api", alertaRoutes)
+  app.use("/api", coletarRoutes)
   const PORT = process.env.PORT || 3000;
   
   // Função principal que aguarda a verificação e criação do banco
