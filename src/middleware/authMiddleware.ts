@@ -3,12 +3,13 @@ import jwt from "jsonwebtoken";
 
 const secret = process.env.JWT_SECRET || "secreto";
 
-export const AuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const AuthMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.header("Authorization");
 
   if (!authHeader) {
     console.warn("Acesso negado: Nenhum cabeçalho de autorização fornecido.");
-    return res.status(401).json({ message: "Acesso negado. Token não fornecido." });
+    res.status(401).json({ message: "Acesso negado. Token não fornecido." });
+    return;
   }
 
   const token = authHeader.replace("Bearer ", "");
@@ -16,7 +17,8 @@ export const AuthMiddleware = (req: Request, res: Response, next: NextFunction) 
 
   if (!token) {
     console.warn("Acesso negado: Token vazio.");
-    return res.status(401).json({ message: "Acesso negado. Token inválido." });
+    res.status(401).json({ message: "Acesso negado. Token inválido." });
+    return;
   }
 
   try {
@@ -26,6 +28,6 @@ export const AuthMiddleware = (req: Request, res: Response, next: NextFunction) 
     next();
   } catch (error) {
     console.error("Erro ao verificar token:", error);
-    return res.status(401).json({ message: "Token inválido" });
+    res.status(401).json({ message: "Token inválido" });
   }
 };
