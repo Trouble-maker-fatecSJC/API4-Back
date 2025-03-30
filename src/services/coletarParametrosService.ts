@@ -87,6 +87,21 @@ class ColetarParametrosService {
   
       await this.coletarParametrosRepository.remove(coleta);
     }
+
+    // Buscar ColetarParametros por ID da Estação
+  async buscarPorIdEstacao(id_estacao: number) {
+    // Busca todos os registros de ColetarParametros associados à estação com o ID fornecido
+    const coletas = await this.coletarParametrosRepository.find({
+      where: { estacao: { id_estacao } }, // Filtra pelo relacionamento com Estacao
+      relations: ["estacao", "parametro"], // Carrega as relações (opcional)
+    });
+
+    if (!coletas || coletas.length === 0) {
+      throw new Error("Nenhuma coleta encontrada para esta estação.");
+    }
+
+    return coletas;
+  }
 }
 
 export default new ColetarParametrosService();

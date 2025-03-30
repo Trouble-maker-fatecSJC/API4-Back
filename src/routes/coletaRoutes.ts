@@ -14,8 +14,13 @@ router.get("/coletar-parametros", (req, res) => {
 });
 
 // Rota para buscar uma coleta de parâmetros por ID
+// router.get("/coletar-parametros/:id", (req, res) => { 
+//   ColetarParametrosController.buscarPorId(req, res);
+// });
+
+// Rota para buscar uma coleta de parâmetros por ID
 router.get("/coletar-parametros/:id", (req, res) => { 
-  ColetarParametrosController.buscarPorId(req, res);
+  ColetarParametrosController.buscarEstacaoId (req, res);
 });
 
 // Rota para atualizar uma coleta de parâmetros por ID

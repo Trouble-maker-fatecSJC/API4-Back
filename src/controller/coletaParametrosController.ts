@@ -68,6 +68,17 @@ class ColetarParametrosController {
     }
   }
 
+   // Buscar ColetarParametros por ID
+   async buscarEstacaoId(req: Request, res: Response) {
+    try {
+      const coleta = await ColetarParametrosService.buscarPorIdEstacao(parseInt(req.params.id));
+      return res.json(coleta);
+    } catch (error) {
+      const err = error as Error;
+      return res.status(404).json({ error: err.message });
+    }
+  }
+
   // Atualizar ColetarParametros
   async atualizar(req: Request, res: Response) {
     try {
