@@ -16,3 +16,5 @@ export class Alerta {
     @JoinColumn({ name: "id_do_parametro" })
     parametro: Parametros;
 }
+
+
