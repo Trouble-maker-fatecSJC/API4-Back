@@ -8,8 +8,6 @@ export class Usuario {
     @Column({ unique: true, length: 50 })
     email: string;
 
-    @Column({ length: 15, nullable: true })
-    telefone: string;
 
     @Column({ length: 200 })
     senha: string;

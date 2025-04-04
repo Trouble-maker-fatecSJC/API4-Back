@@ -5,54 +5,50 @@ class MedidasController {
   async cadastrar(req: Request, res: Response) {
     try {
       const medida = await MedidasService.cadastrar(req.body);
-      return res.status(201).json(medida);
-    } catch (error) {
-      const err = error as Error;
-      return res.status(400).json({ error: err.message });
+      res.status(201).json(medida);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message || "Erro ao cadastrar medida" });
     }
   }
 
   async buscarPorId(req: Request, res: Response) {
     try {
-      const medida = await MedidasService.buscarPorId(Number(req.params.id));
-      if (!medida) return res.status(404).json({ message: "Medida não encontrada" });
-      return res.json(medida);
-    } catch (error) {
-      const err = error as Error;
-      return res.status(500).json({ error: err.message });
+      const id = parseInt(req.params.id);
+      const medida = await MedidasService.buscarPorId(id);
+      res.status(200).json(medida);
+    } catch (error: any) {
+      res.status(404).json({ error: error.message || "Erro ao buscar medida por ID" });
     }
   }
 
-  async buscarTodas(req: Request, res: Response) {
+  async buscarTodos(req: Request, res: Response) {
     try {
-      const medidas = await MedidasService.buscarTodas();
-      return res.json(medidas);
-    } catch (error) {
-      const err = error as Error;
-      return res.status(500).json({ error: err.message });
-    }
-  }
-
-  async atualizar(req: Request, res: Response) {
-    try {
-      const medida = await MedidasService.atualizar(Number(req.params.id), req.body);
-      return res.json(medida);
-    } catch (error) {
-      const err = error as Error;
-      return res.status(400).json({ error: err.message });
+      const medidas = await MedidasService.buscarTodos();
+      res.status(200).json(medidas);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message || "Erro ao buscar todas as medidas" });
     }
   }
 
   async deletar(req: Request, res: Response) {
     try {
-      await MedidasService.deletar(Number(req.params.id));
-      return res.json({ message: "Medida deletada com sucesso" });
-    } catch (error) {
-      const err = error as Error;
-      return res.status(400).json({ error: err.message });
+      const id = parseInt(req.params.id);
+      await MedidasService.deletar(id);
+      res.status(204).send();
+    } catch (error: any) {
+      res.status(404).json({ error: error.message || "Erro ao deletar medida" });
+    }
+  }
+
+  async atualizar(req: Request, res: Response) {
+    try {
+      const id = parseInt(req.params.id);
+      const medida = await MedidasService.atualizar(id, req.body);
+      res.status(200).json(medida);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message || "Erro ao atualizar medida" });
     }
   }
 }
 
 export default new MedidasController();
-

@@ -14,6 +14,9 @@ export class TipoParametro {
     @Column({ length: 30 })
     unidade: string;
 
+    @Column({ length: 30 })
+    offset: string;
+
     @Column({ length: 5 })
     qtd_casadesc: string;
 

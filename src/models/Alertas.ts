@@ -1,10 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import { Parametros } from "./parametros";
 
-@Entity("tipo_alerta")
-export class TipoAlerta {
+@Entity("alerta")
+export class Alerta {
     @PrimaryGeneratedColumn()
-    id_tipo_alerta: number;
+    id_alerta: number;
 
     @Column({ length: 50 })
     nome: string;
@@ -12,7 +12,7 @@ export class TipoAlerta {
     @Column({ length: 200 })
     conteudo: string;
 
-    @ManyToOne(() => Parametros)
+    @ManyToOne(() => Parametros, { nullable: false }) // Um alerta deve conter pelo menos um parâmetro
     @JoinColumn({ name: "id_do_parametro" })
     parametro: Parametros;
 }

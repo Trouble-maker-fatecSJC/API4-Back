@@ -1,25 +1,25 @@
 import { AppDataSource } from "../config/database";
-import { Alerta } from "../models/alerta";
-import { TipoAlerta } from "../models/tipoAlerta"; // Importando a entidade TipoAlerta
+import { Alerta } from "../models/Alertas";
+import { Parametros } from "../models/parametros"; // Importando a entidade Parametros
 
-class AlertaService {
+class alertaService {
   // Função para cadastrar um Alerta
   async cadastrar(dados: Alerta) {
     const alertaRepository = AppDataSource.getRepository(Alerta);
 
-    // Verificar se o TipoAlerta existe antes de associá-lo
-    if (dados.tipoAlerta) {
-      const tipoAlertaRepository = AppDataSource.getRepository(TipoAlerta);
-      const tipoAlerta = await tipoAlertaRepository.findOne({ where: { id_tipo_alerta: dados.tipoAlerta.id_tipo_alerta } });
+    // Verificar se o parâmetro existe antes de associá-lo
+    if (dados.parametro) {
+      const parametroRepository = AppDataSource.getRepository(Parametros);
+      const parametro = await parametroRepository.findOne({ where: { id_parametro: dados.parametro.id_parametro } });
 
-      if (!tipoAlerta) {
-        throw new Error("TipoAlerta não encontrado");
+      if (!parametro) {
+        throw new Error("Parâmetro não encontrado");
       }
 
-      dados.tipoAlerta = tipoAlerta; // Associando o TipoAlerta
+      dados.parametro = parametro; // Associando o parâmetro
     }
 
-    // Salvar o Alerta
+    // Salvar o alerta
     return await alertaRepository.save(dados);
   }
 
@@ -28,15 +28,15 @@ class AlertaService {
     const alertaRepository = AppDataSource.getRepository(Alerta);
     return await alertaRepository.findOne({
       where: { id_alerta: id },
-      relations: ["tipoAlerta"], // Incluindo a relação com a entidade TipoAlerta
+      relations: ["parametro"], // Incluindo a relação com a entidade Parametro
     });
   }
 
   // Função para buscar todos os Alertas
-  async buscarTodos() {
+  async buscarTodas() {
     const alertaRepository = AppDataSource.getRepository(Alerta);
     return await alertaRepository.find({
-      relations: ["tipoAlerta"], // Incluindo a relação com a entidade TipoAlerta
+      relations: ["parametro"], // Incluindo a relação com a entidade Parametro
     });
   }
 
@@ -44,16 +44,16 @@ class AlertaService {
   async atualizar(id: number, dados: Partial<Alerta>) {
     const alertaRepository = AppDataSource.getRepository(Alerta);
 
-    // Verificar se o TipoAlerta existe antes de associá-lo
-    if (dados.tipoAlerta) {
-      const tipoAlertaRepository = AppDataSource.getRepository(TipoAlerta);
-      const tipoAlerta = await tipoAlertaRepository.findOne({ where: { id_tipo_alerta: dados.tipoAlerta.id_tipo_alerta } });
+    // Verificar se o parâmetro existe antes de associá-lo
+    if (dados.parametro) {
+      const parametroRepository = AppDataSource.getRepository(Parametros);
+      const parametro = await parametroRepository.findOne({ where: { id_parametro: dados.parametro.id_parametro } });
 
-      if (!tipoAlerta) {
-        throw new Error("TipoAlerta não encontrado");
+      if (!parametro) {
+        throw new Error("Parâmetro não encontrado");
       }
 
-      dados.tipoAlerta = tipoAlerta; // Atualizando o TipoAlerta
+      dados.parametro = parametro; // Atualizando o parâmetro
     }
 
     await alertaRepository.update({ id_alerta: id }, dados);
@@ -67,4 +67,4 @@ class AlertaService {
   }
 }
 
-export default new AlertaService();
+export default new alertaService();
