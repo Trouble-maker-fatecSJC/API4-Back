@@ -22,11 +22,11 @@ class ParametroService {
     });
   }
 
-  async atualizar(id: number, dados: Partial<Parametros>) {
-    const parametroRepository = AppDataSource.getRepository(Parametros);
-    await parametroRepository.update({ id_parametro: id }, dados);
-    return await this.buscarPorId(id);
-  }
+  // async atualizar(id: number, dados: Partial<Parametros>) {
+  //   const parametroRepository = AppDataSource.getRepository(Parametros);
+  //   await parametroRepository.update({ id_parametro: id }, dados);
+  //   return await this.buscarPorId(id);
+  // }
 
   // async deletar(id: number) {
   //   const parametroRepository = AppDataSource.getRepository(Parametros);
