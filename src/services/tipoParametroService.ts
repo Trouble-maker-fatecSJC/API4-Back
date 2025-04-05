@@ -8,10 +8,12 @@ class tipoParametroService {
 
     const tipoParametro = await tipo_parametroRepository.save(dados);
 
-    const parametro = parametroRepository.create({
-      tipoParametro: tipoParametro
-    });
-    await parametroRepository.save(parametro);
+      // Criar um registro na tabela parametros com o mesmo id do tipoParametro
+      const parametro = parametroRepository.create({
+        id_parametro: tipoParametro.id_tipo_param, // Associar o mesmo ID
+        tipoParametro: tipoParametro, // Relacionar o tipoParametro
+      });
+      await parametroRepository.save(parametro);
     
     return tipoParametro;
 

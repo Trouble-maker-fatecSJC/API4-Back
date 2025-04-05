@@ -8,20 +8,22 @@ class AlarmeService {
     const alarmeRepository = AppDataSource.getRepository(Alarme);
 
     // Verificar se o Alerta existe antes de associá-lo
-    if (dados.alerta) {
-      const alertaRepository = AppDataSource.getRepository(Alerta);
-      const alerta = await alertaRepository.findOne({ where: { id_alerta: dados.alerta.id_alerta } });
+    if (dados.alerta && dados.alerta.id_alerta) {
+        const alertaRepository = AppDataSource.getRepository(Alerta);
+        const alerta = await alertaRepository.findOne({ where: { id_alerta: dados.alerta.id_alerta } });
 
-      if (!alerta) {
-        throw new Error("Alerta não encontrado");
-      }
+        if (!alerta) {
+            throw new Error("Alerta não encontrado");
+        }
 
-      dados.alerta = alerta; // Associando o Alerta
+        dados.alerta = alerta; // Associando o Alerta existente
+    } else {
+        throw new Error("ID do alerta é obrigatório");
     }
 
     // Salvar o Alarme
     return await alarmeRepository.save(dados);
-  }
+}
 
   // Função para buscar Alarme por ID
   async buscarPorId(id: number) {
