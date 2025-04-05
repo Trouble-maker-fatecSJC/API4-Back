@@ -35,6 +35,19 @@ class EstacaoController {
     }
   }
 
+  async buscarPorId(req: Request, res: Response) {
+    try {
+      const estacao = await EstacaoService.buscarPorId(parseInt(req.params.id));
+      if (!estacao) {
+        return res.status(404).json({ message: "Estação não encontrada" });
+      }
+      return res.json(estacao);
+    } catch (error) {
+      const err = error as Error;
+      return res.status(500).json({ error: err.message });
+    }
+  }
+
   async atualizar(req: Request, res: Response) {
     try {
       const estacao = await EstacaoService.atualizar(parseInt(req.params.id), req.body);
