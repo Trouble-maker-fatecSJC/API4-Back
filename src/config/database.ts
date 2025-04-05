@@ -53,9 +53,10 @@ export const checkAndCreateDatabase = async () => {
         tipo INT NOT NULL
       )
     `);
+    // senha adm123 
     await connection.query(`
       INSERT INTO usuario (cpf, email, senha, nome, tipo)
-      VALUES ('50145499855', 'adm@gmail.com', '$10$NEEerfkDRFu2lOVa6CvKoeNsMDgYu/GcJ8eHdI5xYeQI2P24FknU.', 'adm', 1)
+      VALUES ('50145499855', 'adm@gmail.com', '$2b$10$1qFyiBxyrB/P.iahZeoa6ebaaAomx.wb9Y7WXF12thnu54DK38ns2', 'adm', 1)
     `);
     console.log("✅ Usuário padrão 'adm' criado com sucesso!");
   }
