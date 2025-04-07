@@ -127,6 +127,22 @@ class UsuarioService {
     const salt = await bcrypt.genSalt(10);
     return bcrypt.hash(senha, salt);
   }
+
+  async verificarTipoUsuario(tipo: number): Promise<string> {
+    if (tipo === 1) {
+        return "Usuário é um administrador";
+    } else if (tipo === 2) {
+        return "Usuário é um usuário comum";
+    } else {
+        throw new Error("Tipo de usuário inválido");
+    }
+  }
+
+  async buscarPorEmail(email: string) {
+    const usuarioRepository = AppDataSource.getRepository(Usuario);
+    return await usuarioRepository.findOne({ where: { email } });
+}
+
 }
 
 export default new UsuarioService();
