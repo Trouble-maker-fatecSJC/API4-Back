@@ -1,12 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Generated } from "typeorm";
 
 @Entity("estacao")
 export class Estacao {
     @PrimaryGeneratedColumn()
     id_estacao: number;
 
-    @Column({ type: "int", nullable: true })
-    uid: number;
+    @Column({ type: "uuid", nullable: true })
+    @Generated("uuid")
+    uid: string;
 
     @Column({ length: 100 })
     nome: string;

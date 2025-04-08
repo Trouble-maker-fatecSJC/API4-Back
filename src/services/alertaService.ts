@@ -40,6 +40,14 @@ class alertaService {
     });
   }
 
+  // Função para buscar Alerta por título
+  async buscarPorTitulo(titulo: string) {
+    const alertaRepository = AppDataSource.getRepository(Alerta);
+    return await alertaRepository.findOne({
+      where: { nome: titulo },
+    });
+  }
+
   // Função para atualizar um Alerta
   async atualizar(id: number, dados: Partial<Alerta>) {
     const alertaRepository = AppDataSource.getRepository(Alerta);

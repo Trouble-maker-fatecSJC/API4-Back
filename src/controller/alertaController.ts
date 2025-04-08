@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import alertaService from "../services/AlertaService"; // Renamed service
+import alertaService from "../services/alertaService"; // Corrigido para usar o nome correto
 import parametroService from "../services/parametroService";
 
 class AlertaController {

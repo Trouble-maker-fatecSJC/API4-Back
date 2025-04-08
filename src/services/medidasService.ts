@@ -1,6 +1,8 @@
 import { AppDataSource } from "../config/database";
 import { Medidas } from "../models/medidas";
 import { Repository } from "typeorm";
+import AlarmeService from "./alarmeService"; // Importando o serviço de alarmes
+import alertaService from "./alertaService"; // Corrigido para usar o nome correto
 
 class MedidasService {
   private medidasRepository: Repository<Medidas>;
@@ -11,7 +13,22 @@ class MedidasService {
 
   async cadastrar(dados: Medidas) {
     const medida = this.medidasRepository.create(dados);
-    return await this.medidasRepository.save(medida);
+    const medidaSalva = await this.medidasRepository.save(medida);
+
+    // Verificar se o parâmetro é "Temperatura" ou "temperatura" e o valor é maior que 40
+    if (
+      medidaSalva.parametro?.tipoParametro?.nome?.toLowerCase() === "temperatura" &&
+      medidaSalva.valor > 40
+    ) {
+      // Buscar o alerta com título "Temperatura"
+      const alerta = await alertaService.buscarPorTitulo("Temperatura");
+      if (alerta) {
+        // Chamar o serviço de alarmes para cadastrar automaticamente
+        await AlarmeService.cadastrarEmitirAlarme(alerta.id_alerta, medidaSalva.id_medida);
+      }
+    }
+
+    return medidaSalva;
   }
 
   async buscarPorId(id: number) {
