@@ -4,6 +4,7 @@ import { ColetarParametros } from "../models/coletarParametros";
 import { AppDataSource } from "../config/database";
 import { Estacao } from "../models/estacao";
 import { Parametros } from "../models/parametros";
+import { Medidas } from "../models/medidas";
 
 class ColetarParametrosController {
   private coletarParametrosRepository = AppDataSource.getRepository(ColetarParametros);
@@ -13,13 +14,15 @@ class ColetarParametrosController {
     try {
       const dados: Partial<ColetarParametros> = req.body;
 
-      // Extrair os IDs da estação e do parâmetro
+      // Extrair os IDs da estação, do parâmetro e da medida
       const estacaoId = typeof dados.estacao === 'object' ? dados.estacao.id_estacao : dados.estacao;
       const parametroId = typeof dados.parametro === 'object' ? dados.parametro.id_parametro : dados.parametro;
+      const medidaId = typeof dados.medida === 'object' ? dados.medida.id_medida : dados.medida;
 
-      // Buscar a estação e o parâmetro no banco de dados
+      // Buscar a estação, o parâmetro e a medida no banco de dados
       const estacao = await AppDataSource.getRepository(Estacao).findOneBy({ id_estacao: estacaoId });
       const parametro = await AppDataSource.getRepository(Parametros).findOneBy({ id_parametro: parametroId });
+      const medida = await AppDataSource.getRepository(Medidas).findOneBy({ id_medida: medidaId });
 
       if (!estacao) {
         return res.status(404).json({ error: "Estação não encontrada" });
@@ -27,12 +30,16 @@ class ColetarParametrosController {
       if (!parametro) {
         return res.status(404).json({ error: "Parâmetro não encontrado" });
       }
+      if (!medida) {
+        return res.status(404).json({ error: "Medida não encontrada" });
+      }
 
       // Criar a nova coleta de parâmetros com os relacionamentos
       const coleta = this.coletarParametrosRepository.create({
         ...dados,
         estacao, // Associação correta do objeto Estacao
         parametro, // Associação correta do objeto Parametros
+        medida, // Associação correta do objeto Medidas
       });
 
       // Salvar no banco de dados

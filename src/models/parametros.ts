@@ -11,7 +11,4 @@ export class Parametros {
     @JoinColumn({ name: "tipo_parametro" })
     tipoParametro: TipoParametro;
 
-    @ManyToOne(() => Estacao, { nullable: true }) // Propriedade opcional
-    @JoinColumn({ name: "id_estacao" })
-    estacao?: Estacao;
 }

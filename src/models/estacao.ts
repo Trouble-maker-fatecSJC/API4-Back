@@ -1,12 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from "typeorm";
+import { v4 as uuidv4 } from "uuid";
 
 @Entity("estacao")
 export class Estacao {
     @PrimaryGeneratedColumn()
     id_estacao: number;
 
-    @Column({ type: "int", nullable: true })
-    uid: number;
+    @Column({ type: "varchar", length: 100 }) // Alterado para string com tamanho máximo de 36 caracteres
+    uid: string;
 
     @Column({ length: 100 })
     nome: string;
@@ -25,4 +26,9 @@ export class Estacao {
 
     @Column()
     status: boolean;
+
+    @BeforeInsert()
+    generateUid() {
+        this.uid = uuidv4(); // Gera um UUID como string
+    }
 }

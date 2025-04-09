@@ -10,8 +10,8 @@ export class Medidas {
     @Column({ type: "float" })
     valor: number;
 
-    @Column({ length: 100 })
-    unix_time: string;
+    @Column({ type: "timestamp" }) // Alterado de string para timestamp
+    unix_time: Date;
 
     @ManyToOne(() => Estacao)
     @JoinColumn({ name: "id_estacao" })

@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 import mysql from "mysql2/promise"; // Usando mysql2
-import { ParametrosSubscriber } from "../subscriber/parametroSubscriber";
+import { MedidasSubscriber } from "../subscriber/parametroSubscriber";
 import { Usuario } from "../models/usuario";
 import { TipoParametro } from "../models/tipoParametro";
 import { Parametros } from "../models/parametros";
@@ -85,5 +85,5 @@ export const AppDataSource = new DataSource({
   ],
   synchronize: true,
   logging: false,
-  subscribers: [ParametrosSubscriber]
+  subscribers: [MedidasSubscriber]
 });
