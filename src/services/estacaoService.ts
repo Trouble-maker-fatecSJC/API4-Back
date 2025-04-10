@@ -29,6 +29,13 @@ class EstacaoService {
     }
     return estacao;
   }
+  async buscarPorUid(uid: string) {
+    const estacao = await this.estacaoRepository.findOneBy({ uid: uid });
+    if (!estacao) {
+      throw new Error("Estação não encontrada");
+    }
+    return estacao;
+  }
 
   async buscarTodos() {
     return await this.estacaoRepository.find();
