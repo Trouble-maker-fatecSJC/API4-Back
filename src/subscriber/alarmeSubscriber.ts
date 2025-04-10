@@ -50,13 +50,13 @@ import {
         const alarmeRepository = event.manager.getRepository(Alarme);
       
         try {
-          // Find the Alerta with the name "vento"
+          // Find the Alerta containing the word "vento"
           const alerta = await alertaRepository.findOne({
             where: { nome: "vento" },
           });
       
-          if (!alerta) {
-            console.error("Alerta com nome 'vento' não encontrado.");
+          if (!alerta || !alerta.nome.toLowerCase().includes("vento")) {
+            console.error("Alerta com nome contendo 'vento' não encontrado.");
             return;
           }
       
