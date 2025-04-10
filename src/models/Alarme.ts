@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
 import { Alerta } from "./Alertas";
-
+import { Medidas } from "./medidas";
 @Entity("alarme")
 export class Alarme {
     @PrimaryGeneratedColumn()
@@ -12,4 +12,8 @@ export class Alarme {
     @OneToOne(() => Alerta, { nullable: false }) // Um alarme pertence a um e somente um alerta
     @JoinColumn({ name: "id_alerta" })
     alerta: Alerta;
+
+    @OneToOne(() => Medidas, { nullable: false }) // Um alarme contém uma e somente uma medida
+    @JoinColumn({ name: "id_medida" })
+    medida: Medidas;
 }

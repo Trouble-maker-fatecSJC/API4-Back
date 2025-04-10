@@ -5,24 +5,31 @@ import parametroService from "../services/parametroService";
 class AlertaController {
   async cadastrar(req: Request, res: Response) {
     try {
-      // Verificando se o parâmetro existe
-      const parametro = await parametroService.buscarPorId(Number(req.body.id_do_parametro));
-      if (!parametro) {
-        return res.status(404).json({ message: "Parâmetro não encontrado" });
-      }
+        // Convertendo id_do_parametro para número
+        const idParametro = Number(req.body.id_do_parametro);
 
-      // Associando o parâmetro ao alerta
-      const alerta = await alertaService.cadastrar({
-        ...req.body,
-        parametro, // Passando o parâmetro para a criação
-      });
+        if (isNaN(idParametro)) {
+            return res.status(400).json({ message: "ID do parâmetro inválido" });
+        }
 
-      return res.status(201).json(alerta);
+        // Verificando se o parâmetro existe
+        const parametro = await parametroService.buscarPorId(idParametro);
+        if (!parametro) {
+            return res.status(404).json({ message: "Parâmetro não encontrado" });
+        }
+
+        // Associando o parâmetro ao alerta
+        const alerta = await alertaService.cadastrar({
+            ...req.body,
+            parametro, // Passando o parâmetro para a criação
+        });
+
+        return res.status(201).json(alerta);
     } catch (error) {
-      const err = error as Error;
-      return res.status(400).json({ error: err.message });
+        const err = error as Error;
+        return res.status(400).json({ error: err.message });
     }
-  }
+}
 
   async buscarPorId(req: Request, res: Response) {
     try {

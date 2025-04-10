@@ -3,6 +3,7 @@ import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 import mysql from "mysql2/promise"; // Usando mysql2
 import { MedidasSubscriber } from "../subscriber/parametroSubscriber";
+import { AlarmeSubscriber } from "../subscriber/alarmeSubscriber";
 import { Usuario } from "../models/usuario";
 import { TipoParametro } from "../models/tipoParametro";
 import { Parametros } from "../models/parametros";
@@ -85,7 +86,7 @@ export const AppDataSource = new DataSource({
   ],
   synchronize: true,
   logging: false,
-  subscribers: [MedidasSubscriber]
+  subscribers: [MedidasSubscriber, AlarmeSubscriber]
 });
 
 

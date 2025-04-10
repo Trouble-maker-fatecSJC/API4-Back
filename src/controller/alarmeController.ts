@@ -59,6 +59,17 @@ class AlarmeController {
       return res.status(400).json({ error: err.message });
     }
   }
+
+  // Função para verificar detalhes da medida, estação e parâmetro
+  async verificarDetalhes(req: Request, res: Response) {
+    try {
+      const detalhes = await AlarmeService.verificarDetalhes(Number(req.params.id));
+      return res.json(detalhes);
+    } catch (error) {
+      const err = error as Error;
+      return res.status(400).json({ error: err.message });
+    }
+  }
 }
 
 export default new AlarmeController();
