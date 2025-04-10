@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne } from "typeorm";
 import { Alerta } from "./Alertas";
 import { Medidas } from "./medidas";
 @Entity("alarme")
@@ -9,7 +9,7 @@ export class Alarme {
     @Column({ type: "timestamp" })
     data_alarme: Date;
 
-    @OneToOne(() => Alerta, { nullable: false }) // Um alarme pertence a um e somente um alerta
+    @ManyToOne(() => Alerta, { nullable: false }) // Um alarme pertence a um e somente um alerta
     @JoinColumn({ name: "id_alerta" })
     alerta: Alerta;
 

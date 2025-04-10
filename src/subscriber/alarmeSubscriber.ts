@@ -6,7 +6,7 @@ import {
   import { Medidas } from "../models/medidas";
   import { Alarme } from "../models/Alarme";
   import { Alerta } from "../models/Alertas";
-  
+  import { Like } from "typeorm";
   @EventSubscriber()
   export class AlarmeSubscriber implements EntitySubscriberInterface<Medidas> {
     listenTo() {
@@ -52,7 +52,7 @@ import {
         try {
           // Find the Alerta containing the word "vento"
           const alerta = await alertaRepository.findOne({
-            where: { nome: "vento" },
+            where: {nome: Like('%vento%') },
           });
       
           if (!alerta || !alerta.nome.toLowerCase().includes("vento")) {
