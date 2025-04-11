@@ -16,24 +16,18 @@ export const AuthMiddleware = (req: Request, res: Response, next: NextFunction):
     res.status(401).json({ message: "Acesso negado. Token não fornecido." });
     return;
   }
-  const token = authHeader.replace("Bearer ", "");
+
+  const token = authHeader.replace("Bearer ", "").trim();
 
   // Primeiro verifica se é a chave fixa
   if (token === chaveFixa) {
     console.log("Acesso via chave API autorizado");
     (req as any).user = { tipo: "api" };
-    return next();
-  }
-
-  console.log("Tentando processar como JWT...");
- 
-
-  if (!token) {
-    console.warn("Acesso negado: Token vazio.");
-    res.status(401).json({ message: "Acesso negado. Token inválido." });
+    next();
     return;
   }
 
+  // Se chegou aqui, não é a chave fixa
   try {
     const decoded = jwt.verify(token, secret);
     console.log("Token decodificado com sucesso:", decoded);
@@ -41,6 +35,8 @@ export const AuthMiddleware = (req: Request, res: Response, next: NextFunction):
     next();
   } catch (error) {
     console.error("Erro ao verificar token:", error);
-    res.status(401).json({ message: "Token inválido" });
+    res.status(401).json({ 
+      message: "Token inválido. Use 'Bearer com a chave fixa' ou um JWT válido." 
+    });
   }
 };

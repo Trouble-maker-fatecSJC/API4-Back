@@ -4,13 +4,21 @@ import MedidasService from "../services/medidasService";
 class MedidasController {
   async cadastrar(req: Request, res: Response) {
     try {
-      const dados = { ...req.body, unix_time: new Date(req.body.unix_time) }; // Convert unix_time to Date
+      const { valor, unix_time, estacao, parametro } = req.body;
+      
+      const dados = {
+        valor,
+        unix_time,
+        estacao,
+        parametro
+      };
+      
       const medida = await MedidasService.cadastrar(dados);
       res.status(201).json(medida);
     } catch (error: any) {
       res.status(400).json({ error: error.message || "Erro ao cadastrar medida" });
     }
-  }
+}
 
   async buscarPorId(req: Request, res: Response) {
     try {
