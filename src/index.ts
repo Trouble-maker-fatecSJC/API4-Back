@@ -13,7 +13,7 @@ import { checkAndCreateDatabase } from "./config/database";
 import coletarRoutes from "./routes/coletaRoutes";
 import protectedRoutes from "./routes/protectedRoutes";
 import { AuthMiddleware } from "./middleware/authMiddleware";
-import publicRoutes from "./routes/publicRoutes";
+// import publicRoutes from "./routes/publicRoutes";
 
 dotenv.config();
 

@@ -20,7 +20,7 @@ class AlarmeController {
       if (!alarme) {
         return res.status(404).json({ message: "Alarme não encontrado" });
       }
-      return res.json(alarme);
+      return res.json(alarme); // Inclui id_medida automaticamente devido à relação
     } catch (error) {
       const err = error as Error;
       return res.status(500).json({ error: err.message });
@@ -31,7 +31,7 @@ class AlarmeController {
   async buscarTodos(req: Request, res: Response) {
     try {
       const alarmes = await AlarmeService.buscarTodos();
-      return res.json(alarmes);
+      return res.json(alarmes); // Inclui id_medida automaticamente devido à relação
     } catch (error) {
       const err = error as Error;
       return res.status(500).json({ error: err.message });
