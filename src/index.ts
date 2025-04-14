@@ -15,7 +15,6 @@ import protectedRoutes from "./routes/protectedRoutes";
 import { AuthMiddleware } from "./middleware/authMiddleware";
 
 
-
 dotenv.config();
 
 const app = express();

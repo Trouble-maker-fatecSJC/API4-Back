@@ -13,98 +13,101 @@ class ColetarParametrosService {
   }
 
   // Cadastrar um novo ColetarParametros
-  async cadastrar(dados: Partial<ColetarParametros>) {
-    // Verificar se os IDs de estação, parâmetro e medida foram passados corretamente
-    const estacaoId = typeof dados.estacao === 'object' ? dados.estacao.id_estacao : dados.estacao;
-    const parametroId = typeof dados.parametro === 'object' ? dados.parametro.id_parametro : dados.parametro;
-    const medidaId = typeof dados.medida === 'object' ? dados.medida.id_medida : dados.medida;
-
-    // Buscar a estação, o parâmetro e a medida no banco de dados
-    const estacao = await AppDataSource.getRepository(Estacao).findOneBy({ id_estacao: estacaoId });
-    const parametro = await AppDataSource.getRepository(Parametros).findOneBy({ id_parametro: parametroId });
-    const medida = await AppDataSource.getRepository(Medidas).findOneBy({ id_medida: medidaId });
-
-    if (!estacao) {
-      throw new Error("Estação não encontrada");
+    // Cadastrar um novo ColetarParametros
+    async cadastrar(dados: Partial<ColetarParametros>) {
+      const medidaId = typeof dados.medida === 'object' ? dados.medida.id_medida : dados.medida;
+  
+      // Buscar a medida com suas relações
+      const medida = await AppDataSource.getRepository(Medidas).findOne({
+        where: { id_medida: medidaId },
+        relations: ['estacao', 'parametro']
+      });
+  
+      if (!medida) {
+        throw new Error("Medida não encontrada");
+      }
+  
+      if (!medida.estacao) {
+        throw new Error("Estação não encontrada na medida");
+      }
+  
+      // Criando a nova coleta de parâmetros
+      const coleta = this.coletarParametrosRepository.create({
+        ...dados,
+        estacao: medida.estacao,
+        medida
+      });
+  
+      return await this.coletarParametrosRepository.save(coleta);
     }
-    if (!parametro) {
-      throw new Error("Parâmetro não encontrado");
+  
+    // Buscar todas as coletas de parâmetros
+    async buscarTodos() {
+      return await this.coletarParametrosRepository.find({
+        relations: [
+          "estacao",
+          "medida",
+          "medida.parametro"
+        ],
+      });
     }
-    if (!medida) {
-      throw new Error("Medida não encontrada");
+  
+    // Buscar ColetarParametros por ID
+    async buscarPorId(id: number) {
+      const coleta = await this.coletarParametrosRepository.findOne({
+        where: { id },
+        relations: ['estacao', 'medida', 'medida.parametro']
+      });
+  
+      if (!coleta) {
+        throw new Error("Coleta de parâmetros não encontrada");
+      }
+  
+      return coleta;
     }
-
-    // Criando a nova coleta de parâmetros
-    const coleta = this.coletarParametrosRepository.create({
-      ...dados,
-      estacao,
-      parametro,
-      medida, // Associação correta do objeto Medidas
-    });
-
-    // Salvar no banco de dados
-    return await this.coletarParametrosRepository.save(coleta);
+  
+    // Atualizar ColetarParametros por ID
+    async atualizar(id: number, dados: Partial<ColetarParametros>) {
+      const coleta = await this.coletarParametrosRepository.findOne({
+        where: { id },
+        relations: ['estacao', 'medida']
+      });
+  
+      if (!coleta) {
+        throw new Error("Coleta de parâmetros não encontrada");
+      }
+  
+      if (dados.medida) {
+        const medida = await AppDataSource.getRepository(Medidas).findOne({
+          where: { id_medida: typeof dados.medida === 'object' ? dados.medida.id_medida : dados.medida },
+          relations: ['estacao', 'parametro']
+        });
+  
+        if (!medida) {
+          throw new Error("Medida não encontrada");
+        }
+  
+        dados.estacao = medida.estacao;
+        dados.medida = medida;
+      }
+  
+      this.coletarParametrosRepository.merge(coleta, dados);
+      return await this.coletarParametrosRepository.save(coleta);
+    }
+  
+    // Buscar ColetarParametros por ID da Estação
+    async buscarPorIdEstacao(id_estacao: number) {
+      const coletas = await this.coletarParametrosRepository.find({
+        where: { estacao: { id_estacao } },
+        relations: ['estacao', 'medida', 'medida.parametro'],
+      });
+  
+      if (!coletas || coletas.length === 0) {
+        throw new Error("Nenhuma coleta encontrada para esta estação.");
+      }
+  
+      return coletas;
+    }
   }
-
-  // Buscar todas as coletas de parâmetros
-  async buscarTodos() {
-    return await this.coletarParametrosRepository.find({
-      relations: [
-        "estacao", // Carrega os dados da estação associada
-        "parametro", // Carrega os dados do parâmetro associado
-        "medida" // Carrega os dados da medida associada
-      ],
-    });
-  }
-
-  // Buscar ColetarParametros por ID
-  async buscarPorId(id: number) {
-    const coleta = await this.coletarParametrosRepository.findOneBy({ id });
-
-    if (!coleta) {
-      throw new Error("Coleta de parâmetros não encontrada");
-    }
-
-    return coleta;
-  }
-
-  // Atualizar ColetarParametros por ID
-  async atualizar(id: number, dados: Partial<ColetarParametros>) {
-    const coleta = await this.coletarParametrosRepository.findOneBy({ id });
-
-    if (!coleta) {
-      throw new Error("Coleta de parâmetros não encontrada");
-    }
-
-    this.coletarParametrosRepository.merge(coleta, dados);
-    return await this.coletarParametrosRepository.save(coleta);
-  }
-
-  // Deletar um ColetarParametros por ID
-  async deletar(id: number) {
-    const coleta = await this.coletarParametrosRepository.findOneBy({ id });
-
-    if (!coleta) {
-      throw new Error("Coleta de parâmetros não encontrada");
-    }
-
-    await this.coletarParametrosRepository.remove(coleta);
-  }
-
-  // Buscar ColetarParametros por ID da Estação
-  async buscarPorIdEstacao(id_estacao: number) {
-    // Busca todos os registros de ColetarParametros associados à estação com o ID fornecido
-    const coletas = await this.coletarParametrosRepository.find({
-      where: { estacao: { id_estacao } }, // Filtra pelo relacionamento com Estacao
-      relations: ["estacao", "parametro"], // Carrega as relações (opcional)
-    });
-
-    if (!coletas || coletas.length === 0) {
-      throw new Error("Nenhuma coleta encontrada para esta estação.");
-    }
-
-    return coletas;
-  }
-}
 
 export default new ColetarParametrosService();

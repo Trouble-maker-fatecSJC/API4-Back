@@ -34,72 +34,72 @@
 // }
 
 
-import { EntitySubscriberInterface, EventSubscriber, InsertEvent, UpdateEvent, RemoveEvent } from "typeorm";
+import { EntitySubscriberInterface, EventSubscriber, InsertEvent, UpdateEvent } from "typeorm";
 import { Medidas } from "../models/medidas";
 import { ColetarParametros } from "../models/coletarParametros";
 
 @EventSubscriber()
 export class MedidasSubscriber implements EntitySubscriberInterface<Medidas> {
     listenTo() {
-        return Medidas; // Escuta eventos na entidade Medidas
+        return Medidas;
     }
 
     async afterInsert(event: InsertEvent<Medidas>) {
         const coletarParametrosRepository = event.manager.getRepository(ColetarParametros);
 
-        // Cria um novo registro na tabela ColetarParametros com as informações da medida
+        // Verifica se a medida tem todos os relacionamentos necessários
+        if (!event.entity || !event.entity.estacao) {
+            console.error("Dados incompletos na medida:", event.entity);
+            return;
+        }
+
         const novaColeta = coletarParametrosRepository.create({
-            medida: event.entity, // Relaciona com a medida recém-cadastrada
-            estacao: event.entity.estacao, // Relaciona com a estação associada à medida
-            parametro: event.entity.parametro, // Relaciona com o parâmetro associado à medida
-            data_coleta: new Date(), // Define a data de coleta como a data atual
+            medida: event.entity,
+            estacao: event.entity.estacao,
+            data_coleta: new Date()
         });
 
-        // Salva o novo registro na tabela ColetarParametros
         await coletarParametrosRepository.save(novaColeta);
     }
 
     async afterUpdate(event: UpdateEvent<Medidas>) {
         const coletarParametrosRepository = event.manager.getRepository(ColetarParametros);
+        const medidasRepository = event.manager.getRepository(Medidas);
 
-        // Verifica se a entidade foi atualizada e se os relacionamentos estão presentes
-        if (event.entity && event.entity.estacao && event.entity.parametro) {
-            // Cria ou atualiza um registro na tabela ColetarParametros com as informações da medida atualizada
-            const novaColeta = coletarParametrosRepository.create({
-                medida: event.entity, // Relaciona com a medida atualizada
-                estacao: event.entity.estacao, // Relaciona com a estação associada à medida
-                parametro: event.entity.parametro, // Relaciona com o parâmetro associado à medida
-                data_coleta: new Date(), // Define a data de coleta como a data atual
-            });
+        if (!event.entity || !event.entity.estacao) {
+            console.error("Dados incompletos na medida atualizada:", event.entity);
+            return;
+        }
 
-            // Salva o novo registro ou atualiza o existente na tabela ColetarParametros
-            await coletarParametrosRepository.save(novaColeta);
+        // Busca a medida completa com todas as relações
+        const medidaCompleta = await medidasRepository.findOne({
+            where: { id_medida: event.entity.id_medida },
+            relations: ['estacao', 'parametro']
+        });
+
+        if (!medidaCompleta) {
+            console.error("Medida não encontrada");
+            return;
+        }
+
+        // Busca coleta existente
+        const coletaExistente = await coletarParametrosRepository.findOne({
+            where: { medida: { id_medida: medidaCompleta.id_medida } }
+        });
+
+        if (coletaExistente) {
+            // Atualiza a coleta existente
+            coletaExistente.estacao = medidaCompleta.estacao;
+            coletaExistente.medida = medidaCompleta; // Agora usando a medida completa
+            await coletarParametrosRepository.save(coletaExistente);
         } else {
-            console.error("Estação ou parâmetro ausente na medida atualizada:", event.entity);
+            // Cria uma nova coleta
+            const novaColeta = coletarParametrosRepository.create({
+                medida: medidaCompleta,
+                estacao: medidaCompleta.estacao,
+                data_coleta: new Date()
+            });
+            await coletarParametrosRepository.save(novaColeta);
         }
     }
-    // async afterRemove(event: RemoveEvent<Medidas>) {
-    //     const coletarParametrosRepository = event.manager.getRepository(ColetarParametros);
-
-    //     // Remove os registros na tabela ColetarParametros associados à medida deletada
-    //     if (event.entity) {
-    //         const medidaId = event.entity.id_medida;
-
-    //         // Busca e remove os registros relacionados
-    //         const coletasRelacionadas = await coletarParametrosRepository.find({
-    //             where: { medida: { id_medida: medidaId } },
-    //         });
-
-    //         if (coletasRelacionadas.length > 0) {
-    //             await coletarParametrosRepository.remove(coletasRelacionadas);
-    //             console.log(`Registros relacionados à medida ${medidaId} foram removidos.`);
-    //         } else {
-    //             console.log(`Nenhum registro relacionado encontrado para a medida ${medidaId}.`);
-    //         }
-    //     } else {
-    //         console.error("Entidade medida ausente no evento de remoção.");
-    //     }
-    // }
 }
-
-

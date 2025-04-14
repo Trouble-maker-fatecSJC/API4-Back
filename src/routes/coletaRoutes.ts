@@ -29,8 +29,8 @@ router.put("/coletar-parametros/:id", (req, res) => {
 });
 
 // Rota para deletar uma coleta de parâmetros por ID
-router.delete("/coletar-parametros/:id", (req, res) => { 
-  ColetarParametrosController.deletar(req, res);
-});
+// router.delete("/coletar-parametros/:id", (req, res) => { 
+//   ColetarParametrosController.deletar(req, res);
+// });
 
 export default router;
