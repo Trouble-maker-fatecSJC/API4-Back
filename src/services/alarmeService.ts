@@ -33,7 +33,7 @@ class AlarmeService {
     const alarmeRepository = AppDataSource.getRepository(Alarme);
     return await alarmeRepository.findOne({
       where: { id_alarme: id },
-      relations: ["alerta"], // Incluindo a relação com a entidade Alerta
+      relations: ["alerta", "medida"], // Incluindo a relação com a entidade Alerta
     });
   }
 
@@ -41,7 +41,7 @@ class AlarmeService {
   async buscarTodos() {
     const alarmeRepository = AppDataSource.getRepository(Alarme);
     return await alarmeRepository.find({
-      relations: ["alerta"], // Incluindo a relação com a entidade Alerta
+      relations: ["alerta", "medida"], // Incluindo a relação com a entidade Alerta
     });
   }
 

@@ -13,7 +13,7 @@ export class Alarme {
     @JoinColumn({ name: "id_alerta" })
     alerta: Alerta;
 
-    @OneToOne(() => Medidas, { nullable: false }) // Um alarme contém uma e somente uma medida
+    @ManyToOne(() => Medidas, { nullable: false }) // Um alarme contém uma e somente uma medida
     @JoinColumn({ name: "id_medida" })
     medida: Medidas;
 }
